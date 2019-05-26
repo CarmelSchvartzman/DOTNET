@@ -1,0 +1,6 @@
+ return Request.CreateResponse(HttpStatusCode.OK,
+                    entities.Employees.Where(e => e.Gender.ToLower() == "male").ToList());
+
+actionContext.Response = actionContext.Request
+                    .CreateResponse(HttpStatusCode.Unauthorized);
+
