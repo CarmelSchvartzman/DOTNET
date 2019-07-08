@@ -32,3 +32,6 @@ protected void Page_Load(object sender, EventArgs e)
         }
     }
 }
+
+
+//  http://csharp-video-tutorials.blogspot.com/2012/11/how-to-check-if-cookies-are-enabled-or.html
