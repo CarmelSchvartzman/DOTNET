@@ -1,38 +1,36 @@
 public class Logger
 {
-    public static void Log(Exception exception)
+   
+     public static void Log(Exception exception)
     {
+        Log(exception, EventLogEntryType.Error);
+    }
+    public static void Log(Exception exception, EventLogEntryType eventLogEntryType)
+    {
+     do
+     {
+         sbExceptionMessage.Append("Exception Type" + Environment.NewLine);
+         sbExceptionMessage.Append(exception.GetType().Name);
+         sbExceptionMessage.Append(Environment.NewLine + Environment.NewLine);
+         sbExceptionMessage.Append("Message" + Environment.NewLine);
+         sbExceptionMessage.Append(exception.Message + Environment.NewLine + Environment.NewLine);
+         sbExceptionMessage.Append("Stack Trace" + Environment.NewLine);
+         sbExceptionMessage.Append(exception.StackTrace + Environment.NewLine + Environment.NewLine);
+
+         exception = exception.InnerException;
+     }
+     while (exception != null);
         
-        StringBuilder sbExceptionMessage = new StringBuilder();
-        sbExceptionMessage.Append("Exception Type" + Environment.NewLine);        
-        sbExceptionMessage.Append(exception.GetType().Name);       
-        sbExceptionMessage.Append(Environment.NewLine + Environment.NewLine);
-        sbExceptionMessage.Append("Message" + Environment.NewLine);        
-        sbExceptionMessage.Append(exception.Message + Environment.NewLine + Environment.NewLine);
-        sbExceptionMessage.Append("Stack Trace" + Environment.NewLine);        
-        sbExceptionMessage.Append(exception.StackTrace + Environment.NewLine + Environment.NewLine);
-        
-        Exception innerException = exception.InnerException;         <<<<<<<<<<<<<<<<<<<<<<
-        while (innerException != null)                 <<<<<<<<<<<<<<<<<<<<<<
-        {
-            sbExceptionMessage.Append("Exception Type" + Environment.NewLine);
-            sbExceptionMessage.Append(innerException.GetType().Name);
-            sbExceptionMessage.Append(Environment.NewLine + Environment.NewLine);
-            sbExceptionMessage.Append("Message" + Environment.NewLine);
-            sbExceptionMessage.Append(innerException.Message + Environment.NewLine + Environment.NewLine);
-            sbExceptionMessage.Append("Stack Trace" + Environment.NewLine);
-            sbExceptionMessage.Append(innerException.StackTrace + Environment.NewLine + Environment.NewLine);
-           
-            innerException = innerException.InnerException;   <<<<<<<<<<<<<<<<<<<<<<<
-        }
-      
-        if (EventLog.SourceExists("MyEventSource"))
+        if (EventLog.SourceExists("CustomEventSource"))
         {            
-            EventLog log = new EventLog("PragimTech");           
-            log.Source = "PragimTech.com";            
-            log.WriteEntry(sbExceptionMessage.ToString(), EventLogEntryType.Error);
+            EventLog log = new EventLog("MyEventSource");            
+            log.Source = "CustomEventSource";            
+            log.WriteEntry(sbExceptionMessage.ToString(), eventLogEntryType);
         }
     }
+    
+    
+    
 }
 
 ////// Global.asax Application_Error() :
