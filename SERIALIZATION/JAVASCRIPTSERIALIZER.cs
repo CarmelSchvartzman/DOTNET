@@ -1,4 +1,4 @@
-
+using System.Web.Script.Serialization;
 
 
 JavaScriptSerializer jss= new JavaScriptSerializer();
@@ -8,7 +8,7 @@ var json = jss.Serialize(obj);
 User user = jss.Deserialize<User>(jsonResponse); 
  
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+using System.Web.Script.Serialization;
 
 public class Serializer<T>
 {
