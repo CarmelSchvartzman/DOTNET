@@ -1,0 +1,129 @@
+Create table tblEmployee
+(
+     Id int primary key identity,
+     Name nvarchar(50),
+     Gender nvarchar(10),
+     Salary int
+)
+GO
+
+Insert into tblEmployee values ('Mark', 'Male', 50000)
+Insert into tblEmployee values ('Sara', 'Female', 60000)
+Insert into tblEmployee values ('John', 'Male', 45000)
+Insert into tblEmployee values ('Pam', 'Female', 45000)
+GO
+
+Step 2 : Create a stored procedure to retrieve employee data by ID 
+
+Create procedure spGetEmployeeById
+@Id int
+as
+Begin
+     Select ID, Name, Gender, Salary
+     from tblEmployee
+     where ID = @Id
+End
+
+//////////////////////////////////////////////////////
+
+<add name="DBCS"
+      connectionString="server=.;database=SampleDB;integrated security=SSPI" />
+
+
+public class Employee
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public int Salary { get; set; }
+    }
+    
+    
+    
+     [ServiceContract(Namespace = "")]
+    [AspNetCompatibilityRequirements(RequirementsMode =
+        AspNetCompatibilityRequirementsMode.Allowed)]
+    public class EmployeeService
+    {
+        [OperationContract]
+        public Employee GetEmployeeById(int employeeId)
+        {
+            Employee employee = new Employee();
+
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("spGetEmployeeById", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter parameter = new SqlParameter();
+                parameter.ParameterName = "@Id";
+                parameter.Value = employeeId;
+
+                cmd.Parameters.Add(parameter);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    employee.ID = Convert.ToInt32(rdr["Id"]);
+                    employee.Name = rdr["Name"].ToString();
+                    employee.Gender = rdr["Gender"].ToString();
+                    employee.Salary = Convert.ToInt32(rdr["Salary"]);
+                }
+            }
+
+            return employee;
+        }
+    }
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    <html>
+<head>
+    <script src="jquery-1.11.2.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnGetEmployee').click(function () {
+                var empId = $('#txtId').val();
+                $.ajax({
+                    url: 'EmployeeService.svc/GetEmployeeById',
+                    method: 'post',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ employeeId: empId }),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#txtName').val(data.d.Name);
+                        $('#txtGender').val(data.d.Gender);
+                        $('#txtSalary').val(data.d.Salary);
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body style="font-family:Arial">
+    ID :
+    <input id="txtId" type="text" style="width: 86px" />
+    <input type="button" id="btnGetEmployee" value="Get Employee" />
+    <br /><br />
+    <table border="1" style="border-collapse: collapse">
+        <tr>
+            <td>Name</td>
+            <td><input id="txtName" type="text" /></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td><input id="txtGender" type="text" /></td>
+        </tr>
+        <tr>
+            <td>Salary</td>
+            <td><input id="txtSalary" type="text" /></td>
+        </tr>
+    </table>
+</body>
+</html>
