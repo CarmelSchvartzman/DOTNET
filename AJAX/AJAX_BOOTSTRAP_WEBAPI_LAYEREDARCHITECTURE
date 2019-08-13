@@ -1,0 +1,230 @@
+///////  DATA ACCESS LAYER :
+
+ public class Employee
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public int Salary { get; set; }
+
+        public Employee()
+        {
+
+        }
+
+        public Employee( int ID,string Name ,string Gender ,int Salary)
+        {
+            this.ID = ID;
+            this.Name = Name;
+            this.Gender = Gender;
+            this.Salary = Salary;
+        }
+    }
+    
+     public static Employee GetEmployee(int id)
+        {
+            List<Employee> l = new List<Employee>();
+            string cs = ConfigurationManager.ConnectionStrings["CATALOG"].ConnectionString;
+            if (cs == null || cs == "") return null;
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                SqlCommand comm = new SqlCommand("spGetEmployeeById", conn);
+                comm.CommandType = System.Data.CommandType.StoredProcedure;
+                comm.Parameters.Add(new SqlParameter("@Id", id));
+                conn.Open();
+                SqlDataReader r = comm.ExecuteReader();
+                if (r == null) return null;
+                while (r.Read())
+                {
+                    l.Add( new Employee(Convert.ToInt32(r[0]), Convert.ToString(r[1]), Convert.ToString(r[2]), r.GetInt32(3)));
+                }
+            }
+            return l.FirstOrDefault();
+
+
+
+        }
+        
+//////////  BUSINESS LAYER :
+
+using WEBAPI_AJAX_DAL;
+
+namespace WEBAPI_AJAX_BL
+{
+    public class Repository
+    {
+        public static Employee GetEmployee(int id) {
+            return WEBAPI_AJAX_DAL.EmployeesCRUD.GetEmployee(id);
+        }
+    }
+}
+
+//////////   WEBAPI :
+
+
+using WEBAPI_AJAX_DAL;
+
+namespace WEBAPI_AJAX.Controllers
+{
+    public class EmpController : ApiController
+    {
+        [HttpGet]
+        public Employee Ret(int id)
+        {
+            
+            return WEBAPI_AJAX_BL.Repository.GetEmployee(id);
+        }
+    }
+}
+
+
+///////////   HTML :
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <style>
+    .well {
+  min-height: 20px;
+  padding: 39px;
+  margin-bottom: 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid #808080;
+  border-radius: 14px;
+  -webkit-box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.05);
+          box-shadow:  unset 0 1px 10px rgba(0, 0, 0, 0.05);
+}
+    
+    
+    div .centered {
+    display: flex;
+    justify-content: center;
+}</style>
+     <script>
+        $(() => {
+                      
+            const fnSend = () => {
+                
+                const id = $('#txtInput').val();
+
+                $.ajax({
+                    url: 'http://localhost:58776/api/emp/ret',
+                    method: 'get',
+                    data: {id:id},
+                    dataType: 'json',
+                    contentType: 'application/json;charset:utf-8',
+                    success: function (data) {
+                        $("#txtId").val(data.ID);
+                        $("#txtName").val(data.Name);
+                        $("#txtGender").val(data.Gender);
+                        $("#txtSalary").val(data.Salary);
+                    },
+                    error: function () { }
+                });
+
+            }
+
+
+            $("#btnID").click(() => {
+                fnSend();
+                }
+           );
+
+        });
+    </script>
+</head>
+<body>
+    <br />
+    <div class="container">
+        <div class="well col-md-12">
+            <h1>Get User's Data</h1>
+            <div class="row centered">
+                <div class="col-md-6">
+                    <form>
+                        <div class="input-group">
+                            <input id="txtInput" type="text" class="form-control" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" id="btnID"  type="button">Search</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form>
+                        <div class='form-group'>
+                            <label for='txtID' class='control-label col-md-12'>Id  : </label>
+                            <div class='col-md-12'>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                    </span>
+                                    <input id='txtId' class='form-control'>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br><br><br><br />
+                        <div class='form-group'>
+                            <label for='txtID' class='col-md-12'>Name   : </label>
+                            <div class='col-md-12'>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-hand-right"></span>
+                                    </span>
+                                    <input id='txtName' class='form-control' />
+
+                                </div>
+                            </div>
+                        </div><br><br><br> 
+                        <div class='form-group'>
+                            <label for='txtID' class='col-md-12'>Gender : </label>
+                            <div class='col-md-12'>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-camera"></span>
+                                    </span>
+                                    <input id='txtGender' class='form-control' />
+
+                                </div>
+                            </div>
+                        </div><br><br><br> 
+                        <div class='form-group'>
+                            <label for='txtID' class='col-md-12'>Salary : </label>
+                            <div class='col-md-12'>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-envelope"></span>
+                                    </span>
+                                    <input id='txtSalary' class='form-control' />
+                                    <span class="input-group-addon">.00</span>
+                                </div>
+                            </div>
+                        </div><br><br><br><br>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
