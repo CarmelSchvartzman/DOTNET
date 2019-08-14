@@ -1,0 +1,85 @@
+////////////   DESCRIPTION : https://themvcclub.blogspot.com/2019/08/how-to-create-jqueryui-accordion.html
+//////////////////////////////////////////
+/////////  HTTP HANDLER :
+
+using System.Web.Script.Serialization;
+namespace WEBAPI_AJAX.HANDLERS
+{
+    public class AccordionHandler : IHttpHandler
+    {
+        public void ProcessRequest(HttpContext context)
+        {
+            List<Country> lc = new List<Models.Country>() { new Models.Country("France", "France Description"), new Models.Country("Italy", "Italy Description"), new Models.Country("Peru", "Peru Description"), new Models.Country("Chile", "Chile Description")};
+
+            context.Response.Write(new JavaScriptSerializer().Serialize(lc));
+        }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+    }
+}
+
+
+//////////////  JQUERY AJAX :
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../Scripts/bootstrap.min.js"></script>
+    <script>
+        $(() => {
+
+            $.ajax({
+                url: 'http://localhost:58776/Handlers/AccordionHandler.ashx',
+                method: 'get',
+                data: {},
+                dataType: 'json',
+                contentType: 'application/json;charset:utf-8',
+                success: function (data) {
+                    console.warn(data);
+                    let s = '';
+                    $.each(data, (i, e) => {
+
+                        s += `<h2>${e.Name}</h2><div class="">${e.CountryDescription}</div>`;
+
+                    });
+                    $('#countries').html(s).accordion({
+                        collapsible: true
+                    });
+                },
+                error: function (e) { alert(e.message); }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3>Countries</h3></div>
+                    <div class="panel-body">
+                        <div id="countries"></div>
+                    </div>
+                    <div class="panel-footer">
+                        (c) 2019 Carmel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
