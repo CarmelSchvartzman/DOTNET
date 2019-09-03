@@ -24,7 +24,7 @@ public class Serializer<T>
         return this.s.Serialize(t);
     }
 
-    public T Deseralize(string stringObject)
+    public T Deserialize(string stringObject)
     {
         return this.s.Deserialize<T>(stringObject);
     }
