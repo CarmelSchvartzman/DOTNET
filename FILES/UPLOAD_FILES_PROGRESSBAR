@@ -1,0 +1,102 @@
+//////////////  ASHX : HTTP HANDLER 
+
+using System.IO;
+using System.Web;
+namespace Demo
+{
+    public class UploadHandler : IHttpHandler
+    {
+
+        public void ProcessRequest(HttpContext context)
+        {
+            if (context.Request.Files.Count > 0)       <<<<<<<<<<<<<<<<<<<<<<
+            {
+                HttpFileCollection selectedFiles = context.Request.Files;
+                for (int i = 0; i < selectedFiles.Count; i++)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    HttpPostedFile PostedFile = selectedFiles[i];      <<<<<<<<<<<<<<<<<<<<<<
+                    string FileName = context.Server.MapPath("~/Uploads/"
+                        + Path.GetFileName(PostedFile.FileName));
+                    PostedFile.SaveAs(FileName);
+                }
+            }
+        }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+    }
+}
+
+
+///////////////////   JQUERY :
+
+<%@ Page Language="C#" AutoEventWireup="true"
+    CodeBehind="WebForm1.aspx.cs" Inherits="Demo.WebForm1" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="jquery-1.11.2.js"></script>
+    <script src="jquery-ui.js"></script>
+    <link href="jquery-ui.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnUpload").click(function (event) {
+                var files = $("#FileUpload1")[0].files;      <<<<<<<<<<<<<<<<<<<<<<
+                if (files.length > 0) {
+                    var formData = new FormData();      <<<<<<<<<<<<<<<<<<<<<<   USING JS FORMDATA OBJECT 
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append(files[i].name, files[i]);
+                    }
+
+                    var progressbarLabel = $('#progressBar-label');
+                    var progressbarDiv = $('#progressbar');
+
+                    $.ajax({
+                        url: 'UploadHandler.ashx',
+                        method: 'post',
+                        data: formData,
+                        contentType: false,          <<<<<<<<<<<<<<<<<<<<<< CONTENTTYPE: FALSE = for NOT including the HEADER
+                        processData: false,         <<<<<<<<<  PROCESSDATA : FALSE = to say JQUERY NOT convert 'data' to STRING
+                        success: function () {
+                            progressbarLabel.text('Complete');
+                            progressbarDiv.fadeOut(2000);
+                        },
+                        error: function (err) {
+                            alert(err.statusText);
+                        }
+                    });
+
+                    progressbarLabel.text('Uploading...');
+                    progressbarDiv.progressbar({
+                        value: false
+                    }).fadeIn(500);
+                }
+            });
+        });
+    </script>
+</head>
+<body style="font-family: Arial">
+    <form id="form1" runat="server">
+        Select Files :
+        <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="true" />      <<<<<<<<<<<<<<<<<<<<<<
+        <br /><br />
+        <input type="button" id="btnUpload" value="Upload Files" />
+        <br /><br />
+        <div style="width: 300px">
+            <div id="progressbar" style="position: relative; display: none">
+                <span style="position: absolute; left: 35%; top: 20%" id="progressBar-label">
+                    Uploading...
+                </span>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
