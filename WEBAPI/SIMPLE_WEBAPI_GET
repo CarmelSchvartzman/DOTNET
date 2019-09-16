@@ -1,0 +1,116 @@
+//////////   MODEL :
+
+public class Friend
+    {
+        public int id;
+        public string name;
+        public string gender;
+        public string email;
+        public int phoneNumber;
+        public string contactPreference;
+        public DateTime dateOfBirth;
+        public string city;
+        public bool isActive;
+        public string photoPath;
+    }
+    
+////////////  WEB CONFIG :  (for CORS)
+<system.webServer>
+  <httpProtocol>
+			  <customHeaders>
+				  <add name="Access-Control-Allow-Origin" value="http://localhost:4200" />
+				  <add name="Access-Control-Allow-Headers" value="Content-Type" />
+				  <add name="Access-Control-Allow-Methods"
+					   value="GET, POST, PUT, DELETE, OPTIONS" />
+			  </customHeaders>
+		  </httpProtocol>	   
+  </system.webServer>
+    
+////////////  APICONTROLLER :  renders JSON :
+
+ public class ValuesController : ApiController
+    {
+        // GET http://localhost:53534/api/values
+       
+        public IHttpActionResult Get()
+        {
+            var res = new Friend[] { new Friend() { id=0, name="Avi", email="avi@a.a.il"}, new Friend() { id=1,name="Beni", email="beni@b.b.il"} };
+            return Ok(new { d = res});
+            // new JavaScriptSerializer().Serialize(res);  <<<<  renders JSON STRING !!
+
+        }
+
+////////////  APICONTROLLER :  renders XML :
+
+ public class ValuesController : ApiController
+    {
+        [HttpGet]
+        // GET http://localhost:53534/api/values
+        public IEnumerable<Friend> Get()
+        {
+            return new Friend[] { new Friend() { id = 0, name = "Arts", email = "thebeatdoctor@a.a.com" },
+                new Friend() { id = 1, name = "Bender", email = "ilovebender@b.b.com" }  };
+        }
+
+
+///////////  ANGULAR SERVICE :  gets JSON OR XML :
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Friend } from '../models/friends';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SvcForDELETE190916Service {
+
+  constructor(private http: HttpClient) { }
+
+  getData(): Observable<Friend[]> {
+
+    return this.http.get<Friend[]>('http://localhost:53534/api/values');
+
+  }
+}
+
+//////////////  ANGULAR COMPONENT : 
+data: Friend[];
+  constructor(private svc: SimpleServService){}
+
+
+ ngOnInit() {
+ 
+   this.svc.getData().subscribe((ret: any) => {
+      console.warn(`DATA FROM WEBAPI1 : ${ret.d[0].name} - Email : ${ret.d[0].email}`);   ////  FOR JSON !!!
+      this.data = ret.d;    <<<<<<<<<<<<<
+      
+    //  console.warn(`DATA FROM WEBAPI1 : ${ret[0].name} - Email : ${ret[0].email}`);    /////  FOR XML !!!
+    // this.data = ret;
+
+     // let d = JSON.parse(ret);   // IF API SERVER RENDERS JSON STRING !!!
+}
+
+///////////////  APP.MODULE  :
+
+import { HttpClientModule } from '@angular/common/http';    <<<<<<<<<<<<<
+import { SimpleServService } from './erase/simple-serv.service';
+providers: [SimpleServService]
+imports: [FormsModule, HttpClientModule]    <<<<<<<<<<<<<
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
