@@ -2,7 +2,7 @@ private static DataSet GetData()
         {
             try
             {
-                SqlConnection oConn = new SqlConnection("Data Source=svdsql17;Initial Catalog=DBBM;Integrated Security=SSPI ; User Id=DBBM_USER;Password=DBBM_USER; MultipleActiveResultSets=true");
+                SqlConnection oConn = new SqlConnection("Data Source=XXXXXX;Initial Catalog=XXXX;Integrated Security=SSPI ; User Id=XXXXX;Password=XXXXX; MultipleActiveResultSets=true");
 
                 using (SqlDataAdapter da = new SqlDataAdapter())
                 {
