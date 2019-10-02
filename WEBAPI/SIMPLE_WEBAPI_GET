@@ -1,3 +1,4 @@
+  
 //////////   MODEL :
 
 public class Friend
@@ -39,6 +40,12 @@ public class Friend
             // new JavaScriptSerializer().Serialize(res);  <<<<  renders JSON STRING !!
 
         }
+	
+	 public IHttpActionResult Get(int id)
+        {
+            Friend fr = list.Find(f => f.id == id);
+            return Ok(new { fr });  //  <<<<<<<<<<  RETURNS JSON !!
+        }
 
 ////////////  APICONTROLLER :  renders XML :
 
@@ -49,11 +56,20 @@ public class Friend
         public IEnumerable<Friend> Get()
         {
             return new Friend[] { new Friend() { id = 0, name = "Arts", email = "thebeatdoctor@a.a.com" },
-                new Friend() { id = 1, name = "Bender", email = "ilovebender@b.b.com" }  };
+                new Friend() { id = 1, name = "Bender", email = "ilovebender@b.b.com" }  };  //  <<<<<<<<<<  RETURNS XML !!
+        }
+	  public IHttpActionResult Get(int id)
+        {
+            Friend fr = list.Find(f => f.id == id);
+            return Ok(fr);  //  <<<<<<<<<<  RETURNS XML !!
+        }
+	OR
+	public Friend Get(int id)
+        {
+            return list.Find(f => f.id == id);  //  <<<<<<<<<<  RETURNS XML !!
         }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// ng g s dossier/svcForWebApi190916 --flat -m app.module
+
 ///////////  ANGULAR SERVICE :  gets JSON OR XML :
 
 import { Injectable } from '@angular/core';
@@ -98,20 +114,6 @@ import { HttpClientModule } from '@angular/common/http';    <<<<<<<<<<<<<
 import { SimpleServService } from './erase/simple-serv.service';
 providers: [SimpleServService]
 imports: [FormsModule, HttpClientModule]    <<<<<<<<<<<<<
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
