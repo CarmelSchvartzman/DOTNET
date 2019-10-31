@@ -1,0 +1,35 @@
+            FileStream oFile = null;
+            StreamWriter oWriter = null;
+
+            try
+            {
+                oFile = File.Open(this.GetFilesByType(EJobFileType.Error)[0].FilePath, FileMode.Create, FileAccess.Write
+                                                                       , FileShare.ReadWrite);
+                oWriter = new StreamWriter(oFile, Encoding.UTF8);
+
+                DataTable oDT = this.BL.GetErrors(this.ID);            
+
+                foreach (DataRow oRow in oDT.Rows)
+                {
+                    oWriter.WriteLine(oRow);
+                }
+                File.Copy(this.GetFilesByType(EJobFileType.Error)[0].FilePath, sPath 
+                                          + this.GetFilesByType(EJobFileType.Error)[0].FileName);
+            }
+            catch (Exception oExc)
+            {
+            }
+            finally
+            {
+                try
+                {
+                    if (oWriter != null)
+                        oWriter.Close();
+                }
+                catch { }
+                try
+                {
+                    if (oFile != null)
+                        oFile.Close();
+                }
+                catch { }
