@@ -1,0 +1,13 @@
+var logMessage = $"Dedans la function Index {HttpContext.Request.Path}";
+            
+            try
+            {
+                var m_exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                using (StreamWriter w = System.IO.File.AppendText(m_exePath + "\\" + "mylog.txt"))
+                {
+                    w.Write($"\r\nLog Entry : {DateTime.Now.ToLongTimeString() } : {DateTime.Now.ToLongDateString()} ==> { logMessage}\r\n--------------------------------------------------------\r\n");
+                }
+            }
+            catch (Exception ex)
+            {
+            }
