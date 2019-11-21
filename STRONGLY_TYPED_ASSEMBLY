@@ -1,0 +1,16 @@
+////////   cmd :
+
+-- esto produce un key file on c: :
+>sn.exe -k KeyFile.snk
+
+-- escribir el snk en AssemblyInfo :
+
+[assembly:AssemblyKeyFile(@"")]
+
+-- BUILD custom control 
+
+-- CMD:
+
+>gacutil.exe -i c:\myproject\bin\debug\myproject.dll
+
+//// ASSEMBLY ADDED TO THE GLOBAL ASSEMBLY CACHE 
