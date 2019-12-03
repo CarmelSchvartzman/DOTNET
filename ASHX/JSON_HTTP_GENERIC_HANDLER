@@ -6,9 +6,7 @@ using System.Web.Script.Serialization;
 
 namespace DATAHANDLER
 {
-    /// <summary>
-    /// Summary description for Handler1
-    /// </summary>
+    /// http://localhost:50123/Handler1.ashx :
     public class Handler1 : IHttpHandler
     {
 
