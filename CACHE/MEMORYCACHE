@@ -1,0 +1,20 @@
+using System.Runtime.Caching;           //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+namespace DELETE191205.Controllers
+{
+    public class ValuesController : ApiController
+    {
+        public Friend[] a { get; set; }
+        // GET api/values
+        [OutputCache(Duration = 1000, Location = System.Web.UI.OutputCacheLocation.Any, VaryByParam = "none")] // DO NOT WORK!!!
+        public IHttpActionResult Get()
+        {
+
+            if (MemoryCache.Default["a"] == null)           //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            {
+                a = new Friend[] { new Friend() { id = 0, name = "Avi", email = "avi@a.a.il" }, new Friend() { id = 1, name = "Beni", email = "beni@b.b.il" } };
+                MemoryCache.Default["a"] = a;           //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            }
+            a = MemoryCache.Default["a"] as Friend[];           //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            return Ok(new { d = a });// Json<Friend[]>( res);
+        }
