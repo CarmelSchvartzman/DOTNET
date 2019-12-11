@@ -1,0 +1,42 @@
+#region Assembly System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35
+// C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7\System.Web.Extensions.dll
+#endregion
+
+using System.Collections.Generic;
+using System.Text;
+
+namespace System.Web.Script.Serialization
+{
+    //
+    // Summary:
+    //     Json.NET should be used serialization and deserialization. Provides serialization
+    //     and deserialization functionality for AJAX-enabled applications.
+    public class JavaScriptSerializer
+    {
+ 
+        public JavaScriptSerializer(JavaScriptTypeResolver resolver);
+
+
+        public int MaxJsonLength { get; set; }
+     
+        public int RecursionLimit { get; set; }
+
+    
+        public T ConvertToType<T>(object obj);
+     
+        public object ConvertToType(object obj, Type targetType);
+        //
+      
+        public T Deserialize<T>(string input);
+        
+        public object Deserialize(string input, Type targetType);
+    
+        public object DeserializeObject(string input);
+    
+        public void RegisterConverters(IEnumerable<JavaScriptConverter> converters);
+     
+        public string Serialize(object obj);
+       
+        public void Serialize(object obj, StringBuilder output);
+    }
+}
