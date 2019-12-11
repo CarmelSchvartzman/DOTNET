@@ -69,6 +69,30 @@ public class Friend
             return list.Find(f => f.id == id);  //  <<<<<<<<<<  RETURNS XML !!
         }
 
+/////////// DATA HANDLER :
+using System.Web.Script.Serialization;     <<<<<<<<<<<<<<<<<<<<<<<<   Assembly System.Web.Extensions  <<<<<<
+using System.Runtime.Caching;
+
+public class Values : IHttpHandler
+    {
+         private List<Friend> _list;
+        public Values()
+        {
+            if (MemoryCache.Default["friends"] == null)
+            {
+                MemoryCache.Default["friends"] = new List<Friend>() 
+		{ new Friend() { id = 0, name = "Avi", email = "avi@a.a.il" }, 
+		  new Friend() { id = 1, name = "Beni", email = "beni@b.b.il" } }; 
+            }
+            _list = MemoryCache.Default["friends"] as List<Friend>;
+        }
+        public void ProcessRequest(HttpContext context)
+        {
+            dynamic list =   new JavaScriptSerializer().Serialize(_list);
+            context.Response.ContentType = "text/plain";
+            context.Response.Write(list);
+        }
+
 
 ///////////  ANGULAR SERVICE :  gets JSON OR XML :
 
