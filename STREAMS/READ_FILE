@@ -1,0 +1,10 @@
+using System.IO;
+
+
+  using (StreamReader reader = new StreamReader("C:\\Data\\Data.txt"))
+            {
+                string content = reader.ReadToEnd();
+                count = content.Length;
+              
+            }
+            
