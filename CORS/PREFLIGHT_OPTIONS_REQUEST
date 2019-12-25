@@ -1,0 +1,14 @@
+ <httpProtocol>
+		  <customHeaders>
+			  <add name="Access-Control-Allow-Origin" value="http://localhost:4200" />
+			  <add name="Access-Control-Allow-Headers" value="Content-Type" />
+			  <add name="Access-Control-Allow-Methods"
+				   value="GET, POST, PUT, DELETE, OPTIONS" />
+		  </customHeaders>
+	  </httpProtocol>
+    
+    
+    public HttpResponseMessage Options()
+        {
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK };
+        }
