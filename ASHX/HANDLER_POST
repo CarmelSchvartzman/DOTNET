@@ -1,0 +1,29 @@
+///////////  REMEMBER :  https://stackoverflow.com/questions/909002/how-to-post-data-to-asp-net-httphandler
+
+//////////////  HANDLER :
+
+if(context.Request.RequestType == "POST")
+{
+    string key1 = context.Request.Form["key1"]; 
+    var field = HttpContext.Request.Params["key1"];
+}
+else
+{
+    // Request was sent incorrectly somehow
+}
+
+
+
+////////////////  AJAX :
+$.post('test.ashx', 
+       {key1: 'value1', key2: 'value2'}, 
+       function(){alert('Complete!');});
+
+
+-- BEWARE OF : contentType: "application/json; charset=utf-8"
+-- AJAX call request header "ContentType" to : application/x-www-form-urlencoded
+
+<httpHandlers>
+    ...
+    <add verb="*" path="test.ashx" type="Handlers.TestHandler"/>
+</httpHandlers>
