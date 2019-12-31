@@ -1,1 +1,7 @@
+public delegate int d(int k);
+
+ public int F(int k) { return 0; }
+        public int F1(int k) { return 1; }
+        public int F2(int k) { return 2; }
+        
 
