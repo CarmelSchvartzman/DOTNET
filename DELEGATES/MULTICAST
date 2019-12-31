@@ -9,6 +9,9 @@ public delegate int d(int k);
  d i = new d(F);
             i  += F1;
             i += F2;
-            int res = i(0);
+            int res = i(0);  //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             
  
+//////// RESULTS :
+
+// res = 2     //  <<<<<<<<<<<<<<<<<<<  ONLY LAST METHOD RETURN DATA
