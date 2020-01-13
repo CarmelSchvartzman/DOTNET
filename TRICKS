@@ -1,0 +1,5 @@
+///// PERFORMANCE difference between IList<T> and List<T> when executing a foreach statement:
+
+That's because the iterator object returned by 
+List<T>.GetEnumerator is a value-type whereas the one returned by 
+IList<T>.GetEnumerator is a reference-type, and thus requires a memory allocation.
