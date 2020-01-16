@@ -1,0 +1,59 @@
+/////  
+
+Singleton in contrary to static class:
+
+can inherit, and can be inherited;
+can implement interface;
+can be serialized;
+can be passed as PARAMETER to other classes;
+can be disposed.
+
+STATIC:
+ static classes cannot implement interfaces.
+ will be initialized at any time but mostly it is initialized lazily: it is initialized at the last possible moment of time.
+ 
+ /////// SAMPLE:
+ 
+ public sealed class SingletonSampleClass  
+    {  
+        static  SingletonSampleClass _instance;  
+   
+        public static SingletonSampleClass Instance  
+        {  
+            get { return _instance ?? (_instance = new SingletonSampleClass()); }  
+        }  
+        private SingletonSampleClass() { }  
+   
+        public string Message { get; set; }  
+    }  
+
+/// https://www.c-sharpcorner.com/UploadFile/akkiraju/singleton-vs-static-classes/
+////  THREAD SAFE : allows only a single thread to enter the critical area:
+
+
+
+public sealed class Singleton  
+{  
+   private static volatile Singleton instance;  
+   private static object syncRoot = new Object();  
+   
+   private Singleton() {}  
+   
+   public static Singleton Instance  
+   {  
+      get  
+      {  
+         if (instance == null)  
+         {  
+            lock (syncRoot)  
+            {  
+               if (instance == null)  
+                  instance = new Singleton();  
+            }  
+         }  
+   
+         return instance;  
+      }  
+   }  
+}
+
