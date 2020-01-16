@@ -1,0 +1,13 @@
+ public abstract class Abs: IEnumerable    <<<<<<<<<<<<<<<<<<<<<<<<
+    {
+        public Abs() { }
+        public int MyProperty { get; set; }
+
+        public IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    
+    
+    public  abstract partial class ValuesController : ApiController    <<<<<<<<<<<<<<<<<<<<<<<<
