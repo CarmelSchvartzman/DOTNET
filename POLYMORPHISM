@@ -1,0 +1,11 @@
+//// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/polymorphism
+
+Polymorphism is often referred to as the third pillar of object-oriented programming, after encapsulation and inheritance. 
+Polymorphism is a Greek word that means "many-shaped" and it has two distinct aspects:
+
+At run time, objects of a derived class may be treated as objects of a base class
+
+At run-time, the CLR looks up the run-time type of the object: 
+        you can call a method on a base class, and cause a derived class's version of the method to be executed.
+        
+        
