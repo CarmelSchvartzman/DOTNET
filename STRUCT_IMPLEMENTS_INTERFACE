@@ -1,0 +1,25 @@
+public interface IStruct {
+     string Name {get;set;}
+}
+
+public struct Derived : IStruct {
+     public string Name {get;set;}
+}
+/////  Now, let's call it in this way:
+
+public void ChangeName(IStruct structInterface) {  <<<<  PASS BY REFERENCE !!!!!!!!!??????
+     structInterface.Name = "John Doe";
+}
+
+//and we call this function as 
+
+IStruct inter = new Derived();
+ChangeName(inter); 
+
+//HERE NAME IS CHANGED !!
+//inter.Name  == "John Doe";
+This is not something we would expect from value type, but this is exactly as reference types work. 
+So here what happens is that value typed instance of Derived is boxed to reference type constructed on top of IStruct.
+
+There are performance implications and also misleading behavior, like in this case,
+of the value type that starts to behave like a reference type.
