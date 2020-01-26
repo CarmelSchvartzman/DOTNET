@@ -8,9 +8,10 @@ can be serialized;
 can be passed as PARAMETER to other classes;
 can be disposed.
 
-STATIC:
+STATIC:  
  static classes cannot implement interfaces.
  will be initialized at any time but mostly it is initialized lazily: it is initialized at the last possible moment of time.
+ static class Foo { } === .class private abstract auto ansi sealed beforefieldinit Foo extends [mscorlib]System.Object  {}
  
  /////// SAMPLE:
  
