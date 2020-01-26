@@ -4,10 +4,10 @@ while(true){
 }
 
 private async ValueTask<int> AsyncJob(){
-    return await Task.Run(() => this.HeavyLoad(););
+    return await Task.Run(() => this.HeavyLoad());
 }
 
-private int HeavyLoad(){ Task.Delay(); Random r = new Random();int x = r.Next(0, 100); return x; }
+private int HeavyLoad(){ Thread.Sleep(20000); Random r = new Random();int x = r.Next(0, 100); return x; }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 using System.Threading;
