@@ -1,0 +1,26 @@
+//// FUNC delegate type with between 0 and 15 generic parameters, returning type TResult.
+
+private void UseFunc(Func<string> func)
+{
+string output = func(); // Func with a single generic type parameter returns that type
+Console.WriteLine(output);
+}
+
+/// ACTION similar to Func<T1, .., Tn>, but it always returns void.
+
+private void UseAction(Action action)
+{
+action(); // The non-generic Action has no parameters
+}
+private void UseAction(Action<int, string> action)
+{
+action(4, "two"); // The generic action is invoked with parameters matching its type arguments
+}
+
+/// Predicate<T> is also a form of Func but it will always return bool
+
+Predicate<string> predicate = s => s.StartsWith("a");
+Func<string, bool> func = s => s.StartsWith("a");
+// Both of these return true
+var predicateReturnsTrue = predicate("abc");
+var funcReturnsTrue = func("abc");
