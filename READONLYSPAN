@@ -1,0 +1,11 @@
+////  Example of optimization for looking last name inside a string containing full name : WITHOUT creating any new strings :
+
+
+public ReadOnlySpan<char> GetLastNameWithSpan(ReadOnlySpan<char> fullName)
+{
+    var lastSpaceIndex = fullName.LastIndexOf(' ');
+
+    return lastSpaceIndex == -1 
+        ? ReadOnlySpan<char>.Empty 
+        : fullName.Slice(lastSpaceIndex + 1);    ///   get a part of the memory, without copiyng it
+}
