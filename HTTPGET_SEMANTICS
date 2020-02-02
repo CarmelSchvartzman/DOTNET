@@ -13,7 +13,9 @@ Yes, you can send a request body with GET but it should not have any meaning.
 
 If you give it meaning by parsing it on the server and changing your response based on its contents, 
 then you are ignoring this recommendation in the HTTP/1.1 spec, section 4.3:
-
+It's expected that GET requests are idempotent: requesting the same URL multiple times always gets you an equivalent result. 
+This e.g. allows for caching (which some browsers and proxies do very aggressively).
+If you move query parameters into the request body, you are violating this expectation so please avoid this.
 
 
 
