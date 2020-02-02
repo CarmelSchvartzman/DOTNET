@@ -8,3 +8,19 @@ using System.IO;
               
             }
             
+//////////////////////////////////////////////////////////////////////////////
+
+FileStream oFile = null;
+            StreamReader oReader = null;
+            int iRow = 0;
+
+            try
+            {
+                oFile = new FileStream(oFileInfo.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+                oReader = new StreamReader(oFile, Encoding.GetEncoding(DEFAULT_IMPORT_FILE_CODE_PAGE));
+
+                string sLine = "";
+                while (sLine != null)
+                {
+                    sLine = oReader.ReadLine();
