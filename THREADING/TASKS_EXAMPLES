@@ -1,4 +1,13 @@
 ////   
+///  A task will by default use the Threadpool, which saves resources as creating threads can be expensive.
+///  Task can return a result.There is no direct mechanism to return the result from thread.
+/// We can chain tasks together to execute one after the other.
+/// Establish a parent/child relationship when one task is started from another task.
+/// Child task exception can propagate to parent task.
+/// Task support cancellation through the use of cancellation tokens.
+/// Asynchronous implementation is easy in task, using’ async’ and ‘await’ keywords.
+
+
 private async void buttonDownload_Click(object sender, EventArgs e)     <<<<<<<<<<<<<<<<<<<<<<<<<<
 {
     buttonDownload.Enabled = false;
