@@ -1,4 +1,3 @@
-////   
 ///  A task will by default use the Threadpool, which saves resources as creating threads can be expensive.
 ///  Task can return a result.There is no direct mechanism to return the result from thread.
 /// We can chain tasks together to execute one after the other.
