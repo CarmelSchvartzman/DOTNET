@@ -1,0 +1,33 @@
+////   
+private async void buttonDownload_Click(object sender, EventArgs e)     <<<<<<<<<<<<<<<<<<<<<<<<<<
+{
+    buttonDownload.Enabled = false;
+    await Task.Run(() => {                     <<<<<<<<<<<<<<<<<<<<<<<<<<
+        using (var client = new WebClient())
+        {
+            client.DownloadFile("http://example.com/file.mpeg", "file.mpeg");
+        }
+    })
+    buttonDownload.Enabled = true;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Thread:
+
+int result = 0;
+Thread thread = new System.Threading.Thread(() => { 
+    result = 1; 
+});
+thread.Start();
+thread.Join();
+ 
+
+
+Task:
+
+int result = await Task.Run(() => {      <<<<<<<<<<<<<<<<<<<<<<<<<<
+    return 1; 
+});
+Console.WriteLine(result); //is 1
