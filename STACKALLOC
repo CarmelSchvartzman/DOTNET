@@ -1,0 +1,57 @@
+//  This is also extremely useful in situations where you need some scratch space to perform an operation, 
+//   but want to avoid allo­cating heap memory for relatively small sizes
+
+Span<byte> bytes = length <= 128 ? stackalloc byte[length] : new byte[length];
+
+/// Use StackAlloc for short-lived array allocations
+Use Span<T> rather than array pointer since no unsafe context is needed
+The StackAlloc keyword in C# allows for very fast allocation and deallocation of unmanaged memory.
+That is, classes won’t work, but primitives, structs, and arrays are supported. Here’s an example benchmark:
+ 
+struct VectorStruct
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+ 
+[Benchmark]
+public void WithNew()
+{
+    VectorStruct[] vectors = new VectorStruct[5];
+    for (int i = 0; i < 5; i++)
+    {
+        vectors[i].X = 5;
+        vectors[i].Y = 10;
+    }
+}
+ 
+[Benchmark]
+public unsafe void WithStackAlloc() // Note that unsafe context is required
+{
+    VectorStruct* vectors = stackalloc VectorStruct[5];
+    for (int i = 0; i < 5; i++)
+    {
+        vectors[i].X = 5;
+        vectors[i].Y = 10;
+    }
+}
+ 
+public void WithStackAllocSpan() // When using Span, no need for unsafe context
+{
+    Span<VectorStruct> vectors = stackalloc VectorStruct[5];
+    for (int i = 0; i < 5; i++)
+    {
+        vectors[i].X = 5;
+        vectors[i].Y = 10;
+    }
+}
+ 
+This results are:
+
+Method	Mean	Error	StdDev
+WithNew	10.372 ns	0.1531 ns	0.1432 ns
+WithStackAlloc	5.704 ns	0.0938 ns	0.0831 ns
+WithStackAllocSpan	5.742 ns	0.0965 ns	0.1021 ns
+stackalloc is about twice as fast as regular instantiation. When increasing the number of items from 5 to 100, the difference is even greater – 82ns : 36ns.
+
+Use Span<T> rather than array pointer since no unsafe context is needed
