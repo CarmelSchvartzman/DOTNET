@@ -1,0 +1,22 @@
+//// Systems.Buffers (NuGet)  :  https://michaelscodingspot.com/avoid-gc-pressure/
+
+public void RegularArray()
+{
+    int[] array = new int[ArraySize];
+}
+ 
+[Benchmark]
+public void SharedArrayPool()
+{
+    var pool = ArrayPool<int>.Shared;
+    int[] array = pool.Rent(ArraySize);
+    pool.Return(array);
+}
+
+when running for 1,000 integers:
+
+Method      	  Mean	    Error    	StdDev
+RegularArray  	404.53 ns	8.074 ns	18.872 ns
+SharedArrayPool	51.71 ns	1.354 ns	1.505 ns
+
+
