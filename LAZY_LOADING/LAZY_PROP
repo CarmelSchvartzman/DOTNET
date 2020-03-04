@@ -1,0 +1,9 @@
+private Lazy<MyClass> _myProperty = new Lazy<MyClass>( () => new MyClass());
+
+public MyClass MyProperty
+{
+    get
+    {
+        return _myProperty.Value;
+    }
+}
