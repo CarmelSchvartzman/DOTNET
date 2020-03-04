@@ -7,3 +7,28 @@ public MyClass MyProperty
         return _myProperty.Value;
     }
 }
+//////// another example:
+
+ public Lazy<string> Id = new Lazy<string>(() => { return "DEFAULT"; });
+        public Lazy<IList<int>> List = new Lazy<IList<int>>(() => { return ListPopulater(); });
+
+        public static IList<int> ListPopulater()
+        {
+            return new List<int> {    1, 2, 3, 4, 5 };
+        }
+
+
+//////// In this example, the ONE-TO-MANY List is LAZY LOADED:
+
+public class Author
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Address { get; set; }
+        public Lazy<IList<Blog>> Blogs => new Lazy<IList<Blog>>(() => GetBlogDetailsForAuthor(this.Id));  //  <<<<<<<<<<<<<<<<  
+        private IList<Blog> GetBlogDetailsForAuthor(int Id)
+        {
+          
+        }
+    }
