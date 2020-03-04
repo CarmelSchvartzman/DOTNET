@@ -1,0 +1,106 @@
+// STRUCTS are allocated on STACK 
+//  ONLY IF :
+// struct is 0) NOT member of REFERENCE TYPE (array - collection - class) 1) method variable 2) method parameter
+
+  * Here 3 structs with value + reference type fields: struct 2 fields references to struct1 fields (st2.S = st1.S;   st2.C = st1.C;)
+         * and struct3  references directly to struct1 (st3 = st1;):
+         * EVEN THOUGH the fields S and C are reference tipes, STRUCT3 is copied BY VALUE from struct1
+         
+ST1 = 1 - ST2 = 1
+ST1 = OLD - ST2 = OLD - ST3 = OLD
+ST1 = CL1 - ST2 = CL1 - ST3 = CL1
+
+ ==>   STRUCT3 is copied BY VALUE from struct1:
+ ST1 = 10 - ST2 = 1 - ST3 = 1
+ST1 = NEW_VALUE - ST2 = OLD - ST3 = OLD
+ST1 = CL2 - ST2 = CL1 - ST3 = CL1
+ST0 = 1 - ST0 = OLD - ST0 = CL1
+
+
+
+
+///////////////  CODE:
+
+using System;
+
+namespace STRUCTS_HEAP
+{
+    class Program
+    {
+        
+        static void Main(string[] args)
+        {
+              new C().Run();
+        }
+
+        /*
+         * Here 3 structs with value + reference type fields: struct 2 fields references to struct1 fields (st2.S = st1.S;   st2.C = st1.C;)
+         * and struct3  references directly to struct1 (st3 = st1;):
+         * EVEN THOUGH the fields S and C are reference tipes, STRUCT3 is copied BY VALUE from struct1
+         * 
+         * */
+
+        private class C
+        {
+public st st0;
+
+            public void Run() {
+            cl cl0 = new cl { s = "CL0!!!!" };
+            st0 = new st(0,"0", cl0);
+
+            Console.WriteLine("Hello World!");
+
+            fn();
+
+
+            Console.WriteLine($"ST0 = {st0.i} - ST0 = {st0.S} - ST0 = {st0.C.s}");
+            
+            Console.ReadLine();
+        }
+        public void fn()
+            {
+
+                st st1; st st2; st st3;
+
+                cl cl1 = new cl { s = "CL1" };
+                cl cl2 = new cl { s = "CL2" };
+                st1.i = 1; st2.i = st1.i;
+                Console.WriteLine($"ST1 = {st1.i} - ST2 = {st2.i}");
+                st1.S = "OLD"; st2.S = st1.S; st1.C = cl1; st2.C = st1.C;
+                st3 = st1; st0 = st1;
+                Console.WriteLine($"ST1 = {st1.S} - ST2 = {st2.S} - ST3 = {st3.S}");
+
+                Console.WriteLine($"ST1 = {st1.C.s} - ST2 = {st2.C.s} - ST3 = {st3.C.s} ");
+
+                st1.i = 10;
+                st1.S = "NEW_VALUE";
+                st1.C = cl2;
+                Console.WriteLine($"\n ==>   STRUCT3 is copied BY VALUE from struct1 \n ST1 = {st1.i} - ST2 = {st2.i} - ST3 = {st3.i}");
+                Console.WriteLine($"ST1 = {st1.S} - ST2 = {st2.S} - ST3 = {st3.S} ");
+                Console.WriteLine($"ST1 = {st1.C.s} - ST2 = {st2.C.s} - ST3 = {st3.C.s} ");
+            }
+        }
+
+        public struct st
+        {
+            public int i;
+            public String S;
+            public cl C;
+            public st(int i,string s, cl c)
+            {
+                this.i = i;this.S = s;this.C = c;
+            }
+        }
+
+        public class cl {
+            public string s;
+        }
+
+         
+    }
+}
+
+
+
+
+
