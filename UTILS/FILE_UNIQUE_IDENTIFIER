@@ -1,0 +1,19 @@
+public static string GetExportedFilesUniqueIdentifier()
+        {
+            string retVal = "";
+
+            //Take the current time
+            DateTime now = DateTime.Now;
+
+            retVal = now.Year.ToString();
+            retVal += (now.Month < 10) ? "0" + now.Month : now.Month.ToString();
+            retVal += (now.Day < 10) ? "0" + now.Day : now.Day.ToString();
+            retVal += "_";
+            retVal += (now.Hour < 10) ? "0" + now.Hour : now.Hour.ToString();
+            retVal += (now.Minute < 10) ? "0" + now.Minute : now.Minute.ToString();
+            retVal += "_";
+
+            return retVal;
+        }
+        
+        
