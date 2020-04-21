@@ -1,0 +1,66 @@
+try
+            {
+                string sPath = CUtils.GetAppSetting("ApplicationSettings", "CNationalInsuranceExportSafeBox");
+                string sExportFileName = String.Intern(sPath + @"\" + "GI001" + DateTime.Now.ToShortDateString()
+                    // DateTime.Now.ToLongTimeString() 
+                    // TODO:  DateTime.Now.ToShortDateString()
+                    .Replace("/", "").Replace(":", "") + ".txt");
+                oFile = File.Open(this.GetFilesByType(EJobFileType.NationalInsuranceOutput)[0].FilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                oWriter = new StreamWriter(oFile, Encoding.GetEncoding(CJob.DEFAULT_EXPORT_FILE_CODE_PAGE));
+                oFileExport = File.Open(sExportFileName, FileMode.CreateNew);
+                oWriterExport = new StreamWriter(oFileExport, encoding: Encoding.GetEncoding(862)); // 862  Encoding.GetEncoding("Windows-1255");   Unicode  
+                DataTable oDT = this.BL.GetTenants_ForNationalInsurance();
+
+                //int index = 0;
+                StringBuilder sRow = new StringBuilder(10);
+                foreach (DataRow oRow in oDT.Rows)
+                {
+                    //if (index++ >= 200) break;
+                    sRow.Clear();
+                    sRow.Append(CJob.DataRowToCsvString(oRow, -1, "")); // "\t"  "\u0009"
+                    oWriter.WriteLine(sRow.ToString());
+                    oWriterExport.WriteLine(sRow.ToString());
+                }
+
+                string sTitle = String.Intern(" הודעה ממערכת מידרוג"), 
+                    sMsg = String.Intern("נשלח בהצלחה הקובץ ביטוח לאומי"), 
+                    sFrom = FileUtils.GetAppSetts("EmailRecipient01").Item2,
+                    sTo = FileUtils.GetAppSetts("EmailRecipient01").Item2,
+                    sCc1 = FileUtils.GetAppSetts("EmailRecipient02").Item2,
+                    sCc2 = FileUtils.GetAppSetts("EmailRecipient03").Item2;
+
+
+                FileUtils.SendEmail(sTitle, sMsg, sFrom, sTo, sCc1, sCc2);
+
+            }
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+ internal static bool SendEmail(string title, string msg, string from, string to, params string[] cc)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient smtpClient = new SmtpClient("mochmail", 25); // , 587);
+
+                mail.From = new MailAddress(from);
+                mail.To.Add(to);
+
+                foreach (string mailAddress in cc)
+                {
+                    mail.CC.Add(mailAddress);
+                }
+                
+                mail.Subject = title;
+                mail.Body = msg;
+
+                mail.IsBodyHtml = true;
+                //smtpClient.EnableSsl = true;
+                //mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
+               // smtpClient.UseDefaultCredentials = true;
+
+                smtpClient.Send(mail);
+
+            }
+            catch (Exception ex)
+
