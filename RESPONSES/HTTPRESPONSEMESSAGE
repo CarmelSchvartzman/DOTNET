@@ -1,0 +1,29 @@
+// STATUSCODE = 201 + LOCATION HEADER:
+
+public HttpResponseMessage Post(Student student)
+{
+    students.Add(student);
+    var response = Request.CreateResponse(HttpStatusCode.Created);
+    response.Headers.Location = new Uri(Request.RequestUri + "/" + student.Id.ToString());
+    return response;
+}
+
+
+////// WITH LINK:
+
+public HttpResponseMessage Post(Student student)
+{
+    students.Add(student);
+    var response = Request.CreateResponse(HttpStatusCode.Created);
+    response.Headers.Location = new
+        Uri(Url.Link("GetStudentById", new { id = student.Id }));      // <<<<<<<<<<<<<<<<<<<
+    return response;
+}
+
+
+
+[Route("{id:int}", Name = "GetStudentById")]
+public Student Get(int id)
+{
+    return students.FirstOrDefault(s => s.Id == id);
+}
