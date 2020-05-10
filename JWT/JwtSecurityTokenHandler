@@ -1,0 +1,32 @@
+// Create JWTSECURITYTOKENHANDLER with 2 Claims + SigningCredentials with SYMMETRICSECURITYKEY
+[HttpPost("carmel")]
+        public async Task<ActionResult> Login(UserForLoginDTO dataTransferObject)
+        {
+            var user = await _rep.Login(dataTransferObject.Username.ToLower(), dataTransferObject.Password);
+            
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // create TOKEN JWT :
+            var claims = new []{ 
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg.GetSection("AppSettings:Token").Value));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor{
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = credentials
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);            
+
+
+          
+            return StatusCode(200, new {token = tokenHandler.WriteToken(token)});
+        }
