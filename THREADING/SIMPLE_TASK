@@ -1,0 +1,13 @@
+private async void btnProcessFIle_Click(object sender, EventArgs e)
+{
+   
+    Task<int> task = new Task<int>(CountCharacters);
+    task.Start();
+
+    lblCount.Text = "Processing file. Please wait...";
+    
+    
+    // Wait until the long running task completes  :    
+    int count = await task;
+    lblCount.Text = count.ToString() + " characters in file";
+}
