@@ -1,4 +1,8 @@
 // Create JWTSECURITYTOKENHANDLER with 2 Claims + SigningCredentials with SYMMETRICSECURITYKEY
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
+
 [HttpPost("carmel")]
         public async Task<ActionResult> Login(UserForLoginDTO dataTransferObject)
         {
