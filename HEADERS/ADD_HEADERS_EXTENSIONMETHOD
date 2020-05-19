@@ -1,0 +1,31 @@
+ public static class Extensions
+    {
+        public static void AddApplicationError(this HttpResponse response, string msg)
+        {
+            response.Headers.Add("Carmel-Error", msg);
+            response.Headers.Add("Access-Control-Expose-Headers", "Carmel-Error");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
+        }
+
+    }
+    
+////  USAGE: startup.cs    
+      if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler(b => {
+                    b.Run(async ctx => {
+                        ctx.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                        var err = ctx.Features.Get<IExceptionHandlerFeature>();
+                        if (err != null)
+                        {
+                            ctx.Response.AddApplicationError(err.Error.Message);
+                            await  ctx.Response.WriteAsync(err.Error.Message);
+                        }
+                         
+                    });
+                });
+            }
