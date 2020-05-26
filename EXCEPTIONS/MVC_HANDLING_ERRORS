@@ -1,0 +1,31 @@
+public class HomeController : Controller
+{
+    [HandleError]
+    [HandleError(ExceptionType =typeof(NullReferenceException), View ="~/Views/Error/NullReference.cshtml")]
+    public ActionResult Contact()
+    {
+       
+    }
+}
+
+///  OR : 
+    
+public class HomeController : Controller
+{
+    protected override void OnException(ExceptionContext filterContext)
+    {
+        filterContext.ExceptionHandled = true;
+
+        //Log the error!!
+     
+        //Redirect to action
+        filterContext.Result = RedirectToAction("Error", "InternalError");
+
+        // OR return specific view
+        filterContext.Result = new ViewResult
+        {
+            ViewName = "~/Views/Error/InternalError.cshtml"
+        };
+   }
+} 
+
