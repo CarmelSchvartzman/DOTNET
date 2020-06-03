@@ -1,0 +1,7 @@
+MIGRATIONS:
+dotnet tool install --global dotnet-ef
+dotnet ef migrations --help
+dotnet ef database --help
+dotnet-ef migrations add InitialCreate     //  <<<<< if not working, do "dotnet build"
+dotnet ef migrations add AddedUserEntity
+dotnet ef database update
