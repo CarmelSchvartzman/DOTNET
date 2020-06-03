@@ -1,0 +1,43 @@
+//  dotnet ef migrations add AddedPhotosTable
+//  dotnet ef database update
+
+////  DBCONTEXT :
+
+ public class DataContext: DbContext
+    {
+        public DataContext(DbContextOptions<DataContext> options):base(options)        {        }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Photo> Photos { get; set; }
+    }
+
+
+
+////  PARENT :
+
+ public class User
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+      
+        public ICollection<Photo> Photos { get; set; }   //   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ 
+    }
+
+
+
+///// CHILD :
+
+  public class Photo
+    {
+        public int Id { get; set; }
+       
+        public User User { get; set; }  //   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+        public int UserId { get; set; }  //   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ 
+    }
+
+
