@@ -1,0 +1,40 @@
+// NUGET :
+AutoMapper.Extensions.Microsoft.DependencyInjection
+
+// STARTUP:
+ services.AddAutoMapper(typeof(MatchingRepository).Assembly);
+
+
+// HELPERS:
+namespace Proj.API.Extensions
+{
+    public class AutoMapperProfiles : Profile
+    {
+        public AutoMapperProfiles()
+        {
+            CreateMap<User, UserForListDTO>();
+            CreateMap<User, UserForDetailsDTO>();
+        }
+    }
+}
+
+
+///  USAGE :
+
+
+ [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var u = await rep.GetUsers();
+            IEnumerable<UserForListDTO> ret = mapper.Map<IEnumerable<UserForListDTO>>(u);   //  <<<<<<<<<<<<<
+            return Ok(ret);
+        }
+
+        [HttpGet("{id}")]  //  "{controller}/{id}" = api/users?id=1
+        public async Task<IActionResult> GetUser(int id)
+        {
+
+            User u = await rep.GetUser(id);
+            var ret = mapper.Map<UserForDetailsDTO>(u);                                 //  <<<<<<<<<<<<<
+            return Ok(ret);
+        }
