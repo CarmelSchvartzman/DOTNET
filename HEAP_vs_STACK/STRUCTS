@@ -1,6 +1,9 @@
 // STRUCTS are allocated on STACK 
 //  ONLY IF :
 // struct is 0) NOT member of REFERENCE TYPE (array - collection - class) 1) method variable 2) method parameter
+//                  if it's a member, it's allocated INLINE on HEAP(anyway, it's faster deallocated)
+//           1) it's < 16 byte && not boxed && not send as parameter
+
 
   * Here 3 structs with value + reference type fields: struct 2 fields references to struct1 fields (st2.S = st1.S;   st2.C = st1.C;)
          * and struct3  references directly to struct1 (st3 = st1;):
