@@ -1,0 +1,66 @@
+////  Using weak reference for collecting STATIC fields :
+
+// Even though the WeakReference itself is declared static, the object it points to will be GC'ed when memory is low:
+//  Basically, use wrStaticObject instead of staticObject.
+
+class ThingsWrapper {
+    //private static object staticObject = new object();
+    private static WeakReference wrStaticObject 
+        = new WeakReference(new object());
+} 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Another example of WEAKREFERENCE :
+//  Using WEAKREFERENCE for UNUSED entries in dict :
+
+class Cache<TKey,TValue> : IEnumerable<KeyValuePair<TKey,TValue>>
+{ Dictionary<TKey,WeakReference> dict = new Dictionary<TKey,WeakReference>();   //  <<<<<<<<<<<<<<<<<<<<
+
+   public TValue this[TKey key]
+    { get {lock(dict){ return getInternal(key);}}
+      set {lock(dict){ setInteral(key,value);}}     
+    }
+
+   void setInteral(TKey key, TValue val)
+    { if (dict.ContainsKey(key)) dict[key].Target = val;
+      else dict.Add(key,new WeakReference(val));               //  <<<<<<<<<<<<<<<<<<<<
+    } 
+
+
+   public void Clear() { dict.Clear(); }
+
+   /// <summary>Removes any dead weak references</summary>
+   /// <returns>The number of cleaned-up weak references</returns>
+   public int CleanUp()
+    { List<TKey> toRemove = new List<TKey>(dict.Count);
+      foreach(KeyValuePair<TKey,WeakReference> kv in dict)
+       { if (!kv.Value.IsAlive) toRemove.Add(kv.Key);               //  <<<<<<<<<<<<<<<<<<<<  ISALIVE
+       }
+
+      foreach (TKey k in toRemove) dict.Remove(k);
+      return toRemove.Count;
+    }
+
+    public bool Contains(string key) 
+     { lock (dict) { return containsInternal(key); }
+     }
+
+     bool containsInternal(TKey key)
+      { return (dict.ContainsKey(key) && dict[key].IsAlive);               //  <<<<<<<<<<<<<<<<<<<<
+      }
+
+     public bool Exists(Predicate<TValue> match) 
+      { if (match==null) throw new ArgumentNullException("match");
+
+        lock (dict)
+         { foreach (WeakReference weakref in dict.Values) 
+            { if (   weakref.IsAlive                                          //  <<<<<<<<<<<<<<<<<<<<
+                  && match((TValue) weakref.Target)) return true;
+         }  
+      }
+
+       return false;
+     }
+
+    /* ... */
+   }
