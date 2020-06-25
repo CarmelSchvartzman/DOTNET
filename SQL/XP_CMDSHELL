@@ -1,0 +1,5 @@
+DECLARE @Text AS VARCHAR(MAX)
+DECLARE @Cmd AS VARCHAR(100)
+SET @Text = '''Hello world| '''
+SET @Cmd ='echo ' +  @Text + ' > D:\sqlTextFile.txt'
+EXECUTE Master.dbo.xp_CmdShell  @Cmd
