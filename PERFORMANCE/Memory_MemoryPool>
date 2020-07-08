@@ -1,0 +1,40 @@
+// https://docs.microsoft.com/en-us/dotnet/api/system.memory-1?view=netcore-3.1 :
+// Unlike Span<T>, however, MEMORY<T> STRUCT is not a ref struct: can be placed on the managed heap, whereas Span<T> cannot. 
+// As a result, the Memory<T> STRUCT does not have the same restrictions as a Span<T>: It can be used as a field in a class, AND across await and yield boundaries.
+// Also, READONLYMEMORY<T> STRUCT. However, MEMORYPOOL<T> Class is a CLASS:
+
+
+
+//  https://docs.microsoft.com/en-us/dotnet/standard/memory-and-spans/memory-t-usage-guidelines
+
+static void Main()
+    {
+        using (IMemoryOwner<char> owner = MemoryPool<char>.Shared.Rent()) //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  SHARED.RENT()
+        {
+            Console.Write("Enter a number: ");
+            try {
+                var value = Int32.Parse(Console.ReadLine());
+
+                var memory = owner.Memory;
+                WriteInt32ToBuffer(value, memory);
+                DisplayBufferToConsole(memory.Slice(0, value.ToString().Length)); //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  SLICE()
+            }
+            catch (FormatException) {
+                Console.WriteLine("You did not enter a valid number.");
+            }
+            catch (OverflowException) {
+                Console.WriteLine($"You entered a number less than {Int32.MinValue:N0} or greater than {Int32.MaxValue:N0}.");
+            }
+        }
+    }
+
+    static void WriteInt32ToBuffer(int value, Memory<char> buffer)
+    {
+        var strValue = value.ToString();
+
+        var span = buffer.Slice(0, strValue.Length).Span;
+        strValue.AsSpan().CopyTo(span);
+    }
+
+    static void DisplayBufferToConsole(Memory<char> buffer) =>
+        Console.WriteLine($"Contents of the buffer: '{buffer}'");
