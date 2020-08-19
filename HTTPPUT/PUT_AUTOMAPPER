@@ -1,0 +1,61 @@
+////   https://code-maze.com/net-core-web-development-part6/#putRequest
+
+//// DTOs :
+public class OwnerForUpdateDto
+{
+    [Required(ErrorMessage = "Name is required")]
+    [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
+    public string Name { get; set; }
+ 
+    [Required(ErrorMessage = "Date of birth is required")]
+    public DateTime DateOfBirth { get; set; }
+ 
+    [Required(ErrorMessage = "Address is required")]
+    [StringLength(100, ErrorMessage = "Address cannot be loner then 100 characters")]
+    public string Address { get; set; }
+}
+
+//// AUTOMAPPER :
+CreateMap<OwnerForUpdateDto, Owner>();
+
+
+//// ACTION :
+[HttpPut("{id}")]
+public IActionResult UpdateOwner(Guid id, [FromBody]OwnerForUpdateDto owner)
+{
+    try
+    {
+        if (owner == null)
+        {
+            _logger.LogError("Owner object sent from client is null.");
+            return BadRequest("Owner object is null");
+        }
+ 
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Invalid owner object sent from client.");
+            return BadRequest("Invalid model object");
+        }
+ 
+        var ownerEntity = _repository.Owner.GetOwnerById(id);
+        if (ownerEntity == null)
+        {
+            _logger.LogError($"Owner with id: {id}, hasn't been found in db.");
+            return NotFound();
+        }
+ 
+        _mapper.Map(owner, ownerEntity);                       //  <<<<<<<<<<<<<<<<<<<<<  MAP TO UPDATE the record
+ 
+        _repository.Owner.UpdateOwner(ownerEntity);
+        _repository.Save();
+ 
+        return NoContent();
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Something went wrong inside UpdateOwner action: {ex.Message}");
+        return StatusCode(500, "Internal server error");
+    }
+}
+
+
