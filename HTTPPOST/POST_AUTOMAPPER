@@ -1,0 +1,55 @@
+///  https://code-maze.com/net-core-web-development-part6/#putRequest
+
+//// AUTOMAPPER :
+CreateMap<OwnerForCreationDto, Owner>();
+
+
+///  DTOs :
+public class OwnerForCreationDto
+{
+    [Required(ErrorMessage = "Name is required")]
+    [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
+    public string Name { get; set; }
+ 
+    [Required(ErrorMessage = "Date of birth is required")]
+    public DateTime DateOfBirth { get; set; }
+ 
+    [Required(ErrorMessage = "Address is required")]
+    [StringLength(100, ErrorMessage = "Address cannot be loner then 100 characters")]
+    public string Address { get; set; }
+}
+
+/////  
+[HttpPost]
+public IActionResult CreateOwner([FromBody]OwnerForCreationDto owner)
+{
+    try
+    {
+        if (owner == null)
+        {
+            _logger.LogError("Owner object sent from client is null.");
+            return BadRequest("Owner object is null");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError("Invalid owner object sent from client.");
+            return BadRequest("Invalid model object");
+        }
+
+        var ownerEntity = _mapper.Map<Owner>(owner);   //  <<<<<<<<<<<<<<<<  MAP to CREATE the record , from DTO to DB
+
+        _repository.Owner.CreateOwner(ownerEntity);
+        _repository.Save();
+
+        var createdOwner = _mapper.Map<OwnerDto>(ownerEntity);     //  <<<<<<<<<<<<<<<<  MAP to return the created record  
+
+        return CreatedAtRoute("OwnerById", new { id = createdOwner.Id }, createdOwner);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Something went wrong inside CreateOwner action: {ex.Message}");
+        return StatusCode(500, "Internal server error");
+    }
+}
+
