@@ -1,0 +1,20 @@
+[HttpPut]  
+public string UpdateEmploye(Employe mode) {  
+    return empTest.updateEmploye(mode);  
+  
+}
+
+
+
+public string updateEmploye(Employe mode) {  
+    EmployeeEntities1 EM = new EmployeeEntities1();  
+    Employe emps = db.Employes.Where(c => c.EmpID == mode.EmpID).Single < Employe > ();  
+    emps.EmpID = mode.EmpID;  
+    emps.EmpMoNo = mode.EmpMoNo;  
+    emps.EmpAddress = mode.EmpAddress;  
+    emps.EmpName = mode.EmpName;  
+    emps.EmpProfession = mode.EmpProfession;  
+    EM.Entry(emps).State = System.Data.Entity.EntityState.Modified;  
+    EM.SaveChanges();  
+    return "Hey!! Amit your Employee Data Updated Successfully...";  
+}
