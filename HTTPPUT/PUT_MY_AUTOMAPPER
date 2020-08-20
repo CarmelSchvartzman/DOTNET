@@ -1,0 +1,73 @@
+////////  SETUP:
+Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection -Version 7.0.0
+
+
+//////////// CONFIGURATION :
+// Startup.cs
+using AutoMapper;
+public void ConfigureServices(IServiceCollection services){
+     // services.AddAutoMapper(typeof(Startup));
+     services.AddAutoMapper(typeof(MatchingRepository).Assembly);
+}
+
+//  AutoMapperProfiles.cs :
+public class AutoMapperProfiles : Profile
+{
+        public AutoMapperProfiles()
+        {
+          CreateMap<UserForUpdateDTO, User>();
+        }
+}
+
+///////////////  ANGULAR :
+UpdateUser(id: number, user: User) {
+    return this.http.put(this.url + 'users/' + id, user);
+}
+
+export interface User {
+
+  id: number;
+  userName: string;
+  knownAs: string;
+  age: number;
+  gender: string;
+  created: Date;
+  lastActive: any; // Date
+  photoUrl: string;
+  city: string;
+  country: string;
+  interests?: string;
+  introduction?: string;
+  lookingFor?: string;
+  photos?: Photo[];
+}
+
+
+public class UserForUpdateDTO
+    {     
+        public string Introduction { get; set; }
+        public string LookingFor { get; set; }
+        public string Interests { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }        
+    }
+
+/////////////// CONTROLLERBASE :
+
+[HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDTO user)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+            var userToUpdate = await rep.GetUser(id);  //  await MyF(id);
+            mapper.Map(user, userToUpdate);
+
+            if (await rep.SaveAll())
+            {
+                return NoContent();
+            }
+            throw new Exception($@"Updating user {id} failed on save");
+        }
+        
