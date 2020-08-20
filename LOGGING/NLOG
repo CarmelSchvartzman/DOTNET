@@ -1,0 +1,116 @@
+///////////////    https://code-maze.com/net-core-web-development-part3/
+
+Install-Package NLog.Extensions.Logging -Version 1.6.1
+OR
+NuGet  >>>>>>>   " NLog.Extensions.Logging  "
+     
+
+/////////////  INTERFACE  /////////////////////////////////////////////////////////////////////////////////
+public interface ILoggerManager
+    {
+        void LogInfo(string message);
+        void LogWarn(string message);
+        void LogDebug(string message);
+        void LogError(string message);
+    }
+
+
+///////////  IMPLEMENTATION //////////////////////////////////////////////////////////////////////////
+public class LoggerManager : ILoggerManager
+    {
+        private static ILogger logger = LogManager.GetCurrentClassLogger();
+ 
+        public void LogDebug(string message)
+        {
+            logger.Debug(message);
+        }
+ 
+        public void LogError(string message)
+        {
+            logger.Error(message);
+        }
+ 
+        public void LogInfo(string message)
+        {
+            logger.Info(message);
+        }
+ 
+        public void LogWarn(string message)
+        {
+            logger.Warn(message);
+        }
+    }
+
+//////////////  nlog.config  :  folder to create log files in, what the name of these files will be and what a minimum level of logging is :   /////////
+
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      autoReload="true"
+      internalLogLevel="Trace"
+      internalLogFile="d:Projects\Blog-AccountOwner\Project\internal_logs\internallog.txt">
+ 
+  <targets>
+    <target name="logfile" xsi:type="File"
+            fileName="d:/Projects/Blog-AccountOwner/Project/logs/${shortdate}_logfile.txt"
+            layout="${longdate} ${level:uppercase=true} ${message}"/>
+  </targets>
+ 
+  <rules>
+    <logger name="*" minlevel="Debug" writeTo="logfile" />
+  </rules>
+</nlog>
+
+//////////  EXTENSION METHODS :  ///////////////////////////////////////////////////////////////////////////
+
+public static class ServiceExtensions
+{
+      public static void ConfigureLoggerService(this IServiceCollection services)
+      {
+          services.AddSingleton<ILoggerManager, LoggerManager>();
+      }
+}
+
+/////////  CONFIGURATION :  ////////////////////////////////////////////////////////////////////////////////
+/// STARTUP.CS :
+
+public Startup(IConfiguration configuration)
+{
+    LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+    Configuration = configuration;
+}
+
+public static void ConfigureLoggerService(this IServiceCollection services)
+{
+    services.AddSingleton<ILoggerManager, LoggerManager>();
+}
+
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.ConfigureLoggerService();
+}
+
+//////////////////////   USAGE  :  ////////////////////////////////////////////////////////////////////////////////
+
+ [HttpGet]
+    public IEnumerable<string> Get()
+    {
+        _logger.LogInfo("Here is info message from the controller.");
+        _logger.LogDebug("Here is debug message from the controller.");
+        _logger.LogWarn("Here is warn message from the controller.");
+        _logger.LogError("Here is error message from the controller.");
+ 
+        return new string[] { "value1", "value2" };
+    }
+    
+    
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
