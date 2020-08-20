@@ -1,1 +1,22 @@
+////////////  SETUP :
+
+
+
+/////////// SCAFFOLD :
+PM> get-help scaffold-dbcontext –detailed
+
+PM>Scaffold-DbContext  "Data Source=svdsql17;Initial Catalog=DBCT;Integrated Security=True;MultipleActiveResultSets=true;Trusted_Connection=True;" 
+                         Microsoft.EntityFrameworkCore.SqlServer -context APIDBContext -OutputDir Models -t BankAccounts,  Banks,TBCT_MAHOZ –force
+
+dotnet user-secrets set ConnectionStrings.Chinook "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Chinook"
+dotnet ef dbcontext scaffold Name=ConnectionStrings.Chinook Microsoft.EntityFrameworkCore.SqlServer
+OR
+dotnet ef dbcontext scaffold "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Chinook" Microsoft.EntityFrameworkCore.SqlServer
+
+// SIMPLE TABLE :
+PM> Scaffold-DbContext ....... -Tables [TableName]
+dotnet ef dbcontext scaffold  ....... -table [TableName] 
+
+
+
 
