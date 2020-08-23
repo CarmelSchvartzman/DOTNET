@@ -5,7 +5,7 @@
 /////////// SCAFFOLD :
 PM> get-help scaffold-dbcontext –detailed
 
-PM>Scaffold-DbContext  "Data Source=svdsql17;Initial Catalog=xxxx;Integrated Security=True;MultipleActiveResultSets=true;Trusted_Connection=True;" 
+PM>Scaffold-DbContext  "Data Source=xxxxxx;Initial Catalog=xxxx;Integrated Security=True;MultipleActiveResultSets=true;Trusted_Connection=True;" 
                          Microsoft.EntityFrameworkCore.SqlServer -context APIDBContext -OutputDir Models -t BankAccounts,  Banks  –force
 
 dotnet user-secrets set ConnectionStrings.Chinook "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Chinook"
