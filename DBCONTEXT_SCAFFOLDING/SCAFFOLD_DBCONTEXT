@@ -1,5 +1,6 @@
-////////////  SETUP :
-
+////////////  SETUP :  NUGET
+Microsoft.EntityFrameworkCore.Tools
+Bricelam.EntityFrameworkCore.Pluralizer
 
 
 /////////// SCAFFOLD :
