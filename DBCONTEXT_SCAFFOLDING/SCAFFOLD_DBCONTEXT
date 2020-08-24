@@ -13,7 +13,7 @@ dotnet user-secrets set ConnectionStrings.Chinook "Data Source=(localdb)\MSSQLLo
 dotnet ef dbcontext scaffold Name=ConnectionStrings.Chinook Microsoft.EntityFrameworkCore.SqlServer
 OR
 dotnet ef dbcontext scaffold "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Chinook" Microsoft.EntityFrameworkCore.SqlServer
-OR
+OR  (PREFERRED : connection string on app.settings) :
 dotnet ef dbcontext scaffold -Connection Name=MyAppSettingsConnectionString   Microsoft.EntityFrameworkCore.SqlServer    -context MyDBContext -OutputDir Models -t BankAccounts,  Banks  –force
 
 
