@@ -1,0 +1,19 @@
+//  https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/volatile
+//    https://www.infoworld.com/article/3229360/how-to-use-the-volatile-keyword-in-c.html
+
+////////////// tells the JIT compiler that the value of a variable must never be cached :
+//     and always get the most up-to-date value.
+// The volatile keyword indicates that a field might be modified by multiple threads that are executing at the same time, 
+ //  but ENSURES you to get the LATEST value,  in the order in which they were performed. 
+    In C# all memory writes are volatile irrespective of whether you are writing data to a volatile or a non-volatile object. 
+    BUT when you are READING data , the executing thread may or may not always get the latest value. 
+    
+class Program
+    {
+        public volatile int i;
+    }
+    
+
+
+    
+    
