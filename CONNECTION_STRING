@@ -1,0 +1,1 @@
+"ConnectionStrings": { "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=studentWebApi;Trusted_Connection=True;MultipleActiveResultSets=True" },
