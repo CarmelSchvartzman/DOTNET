@@ -1,0 +1,83 @@
+
+//// NUGET:
+NLog.Web.AspNetCore
+
+//////   https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-3
+//// nlog.config
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <targets>
+    <!-- write logs to file  -->
+    <target xsi:type="File" name="allfile" fileName="d:\temp\nlog-all-${shortdate}.log"
+            layout="${longdate}|${event-properties:item=EventId_Id}|${uppercase:${level}}|${logger}|${message} ${exception:format=tostring}" />
+  </targets>
+  <rules>    
+    <logger name="*" minlevel="Trace" writeTo="allfile" />
+  </rules>
+</nlog>
+
+
+
+
+////// ASPNET CORE GITHUB >>> "CreateDefaultBuilder" >>>>  https://github.com/dotnet/aspnetcore/blob/7e9e03b70124784b1de5564c573bd65cdaccbfcc/src/DefaultBuilder/src/WebHost.cs
+////// program.cs
+  public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+             .ConfigureLogging(logging =>
+             {
+                 logging.ClearProviders();
+                 logging.AddDebug();
+                 logging.AddConsole();
+                 logging.AddNLog();    <<<<<<<<<<<<<<<<<<<<<    
+             });
+    }
+
+
+
+
+
+
+//////  appsettings.json  PROD
+{
+  "ConnectionStrings": { "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=BDAzure01;Trusted_Connection=True;MultipleActiveResultSets=True" },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"    ////   TRACE DEBUG INFORMATION WARNING ERROR CRITICAL
+    }
+  },
+  "AllowedHosts": "*"
+}
+////// appsettings.json  DEV
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "System": "Information",
+      "Microsoft": "Information",
+      "AppSqlDB.Controllers.StudentsController": "Trace" <<<<<<<<<<<<<<<<
+    }
+  }
+}
+
+
+
+////// controller:
+public StudentsController(StudContext context, ILogger<StudentsController> logger) <<<<<<<<<<<<<<<<
+        {
+            _context = context;
+            _logger = logger; <<<<<<<<<<<<<<<<
+        }
+ [HttpGet]
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        {
+            _logger.LogTrace($@"LogTrace"); <<<<<<<<<<<<<<<<
+            _logger.LogDebug($@"LogDebug");
+            _logger.LogInformation($@"LogInformation");
+            _logger.LogWarning($@"LogWarning");
+            _logger.LogError($@"LogError");
+            _logger.LogCritical($@"LogCritical");
+            return await _context.Students.ToListAsync();
+        }
+
