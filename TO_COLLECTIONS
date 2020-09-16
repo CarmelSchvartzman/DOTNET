@@ -1,0 +1,39 @@
+//////////////////   https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1#complex-types
+
+Collections
+For targets that are collections of simple types, model binding looks for matches to parameter_name or property_name. 
+If no match is found, it looks for one of the supported formats without the prefix. For example:
+
+Suppose the parameter to be bound is an array named selectedCourses:
+
+
+public IActionResult OnPost(int? id, int[] selectedCourses)
+
+
+Form or query string data can be in one of the following formats:
+
+
+
+selectedCourses=1050&selectedCourses=2000 
+
+
+selectedCourses[0]=1050&selectedCourses[1]=2000
+
+
+[0]=1050&[1]=2000
+
+
+selectedCourses[a]=1050&selectedCourses[b]=2000&selectedCourses.index=a&selectedCourses.index=b
+
+
+[a]=1050&[b]=2000&index=a&index=b
+The following format is supported only in form data:
+
+
+Copy
+selectedCourses[]=1050&selectedCourses[]=2000
+For all of the preceding example formats, model binding passes an array of two items to the selectedCourses parameter:
+
+selectedCourses[0]=1050
+selectedCourses[1]=2000
+Data formats that use subscript numbers (... [0] ... [1] ...) must ensure that they are numbered sequentially starting at zero. If there are any gaps in subscript numbering, all items after the gap are ignored. For example, if the subscripts are 0 and 2 instead of 0 and 1, the second item is ignored.
