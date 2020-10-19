@@ -2,7 +2,7 @@
 public class MyAuthHandler: AuthenticationHandler<AuthenticationSchemeOptions>{
    
    protected override Task<AuthenticationResult> HandleAuthenticationAsync(){
-      
+      if(!Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.Fail("No Authorization");
    }
 }
 
