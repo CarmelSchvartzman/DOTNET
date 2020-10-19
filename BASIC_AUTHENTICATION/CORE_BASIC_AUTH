@@ -21,9 +21,7 @@ public class MyAuthHandler: AuthenticationHandler<AuthenticationSchemeOptions>{
 
 ///// STARTUP :
 // ConfigureServices()  :
-services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, MyAuthHandler>("BasicAuthentication",null)
-
-
+services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, MyAuthHandler>("BasicAuthentication",null);
 
 
 // Configure() : 
