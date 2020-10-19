@@ -1,9 +1,10 @@
 //////   AUTHENTICATIONHANDLER :
-
-
-
-
-
+public class MyAuthHandler: AuthenticationHandler<AuthenticationSchemeOptions>{
+   
+   protected override Task<AuthenticationResult> HandleAuthenticationAsync(){
+      
+   }
+}
 
 ///// STARTUP :
 // ConfigureServices()  :
