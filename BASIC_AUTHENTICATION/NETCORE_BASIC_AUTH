@@ -1,0 +1,18 @@
+//////   AUTHENTICATIONHANDLER :
+
+
+
+
+
+
+///// STARTUP :
+// ConfigureServices()  :
+services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, MyAuthHandler>("BasicAuthentication",null)
+
+
+
+
+// Configure() : 
+app.UseAuthentication();
+app.UseAuthorization();
+
