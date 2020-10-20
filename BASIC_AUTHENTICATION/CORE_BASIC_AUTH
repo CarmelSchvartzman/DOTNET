@@ -1,7 +1,7 @@
 //////   AUTHENTICATIONHANDLER :
 public class MyAuthHandler: AuthenticationHandler<AuthenticationSchemeOptions>{
    
-   protected override Task<AuthenticateResult> HandleAuthenticationAsync(){
+   protected override async Task<AuthenticateResult> HandleAuthenticationAsync(){
       if(!Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.Fail("No Authorization");
       var val = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
       var bytes = Convert.FromBase64String(val.Parameter);
