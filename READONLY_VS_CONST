@@ -1,0 +1,10 @@
+CONST
+compile time
+static
+shared bertween all instances
+
+
+READONLY
+runtime
+heap
+assigned at initialization OR constructor
