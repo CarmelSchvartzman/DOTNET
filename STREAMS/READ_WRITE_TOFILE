@@ -1,0 +1,22 @@
+//////////////////   ATENCION: SI NO SE ESCRIBE EL NOMBRE DEL FILE, RECIBIMOS ERROR "UNAUTHORIZED" - "NO ACCESS..." !!!!!!!!
+
+var x = new StreamWriter(new FileStream(@"C:\Temp\FMPoliceExportBKP\t1.txt", FileMode.Create));  //  <<<<<<<< NOMBRE DEL FILE : t1.txt !! ==> SI NO : ERROR "UNAUTHORIZED"  - "NO ACCESS..." !!!
+            x.WriteLine("Hello");
+            x.Flush();
+
+            var y = File.CreateText(@"C:\Temp\FMPoliceExportBKP\t2.txt");  //  <<<<<<<< NOMBRE DEL FILE : t1.txt !! ==> SI NO : ERROR "UNAUTHORIZED"  - "NO ACCESS..." !!!
+
+            y.WriteLine("Hello");
+            y.Flush();
+
+       
+
+            // Open the file to read from.
+            using (StreamReader sr = File.OpenText(path))
+            {
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(s);
+                }
+            }
